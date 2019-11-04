@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
                                                     
 networks:
   traefik_proxy:
@@ -6,34 +6,142 @@ networks:
       name: traefik_proxy
   default:
     driver: bridge
-    
+ 
 volumes:
-  files:
+  jmsdb:
     driver: local
-  mysql:
-    driver: local
-
+  
 services:
-  owncloud:
-    image: owncloud/server
-    container_name: owncloud 
-    volumes:
-      - "files:/mnt/data"
+  db:
+    image: mysql:5.7
+    restart: always
     environment:
-      - OWNCLOUD_VERSION=10.0.7
-      - OWNCLOUD_DOMAIN=jaysmedia.site
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=admin
-      - HTTP_PORT=80
-      - HTTPS_PORT=443
+      MYSQL_DATABASE: 'jmsdb'
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ${USERDIR}/docker/shared/jmsdb:/var/lib/mysql
+    networks:
+      - default
+      - traefik_proxy
+  nextcloud:
+    container_name: nextcloud
+    restart: always
+    image: linuxserver/nextcloud
+    volumes:
+      - ${USERDIR}/docker/nextcloud:/config
+      - ${USERDIR}/shared_data:/data
+      - ${USERDIR}/docker/shared:/shared
+#    ports:
+#      - "XXXX:443"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    networks:
+      - traefik_proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.backend=owncloud"
-      - "traefik.frontend.rule=Host:owncloud.jaysmedia.site"
-#      - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /traefik"
-      - "traefik.port=80"
+      - "traefik.backend=nextcloud"
+      - "traefik.frontend.rule=Host:owncloud.${DOMAINNAME}"
+      - "traefik.port=443"
+      - "traefik.protocol=https"
       - "traefik.docker.network=traefik_proxy"
       - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.frontend.headers.STSSeconds=315360000"
+      - "traefik.frontend.headers.browserXSSFilter=true"
+      - "traefik.frontend.headers.contentTypeNosniff=true"
+      - "traefik.frontend.headers.forceSTSHeader=true"
+      - "traefik.frontend.headers.SSLHost=example.com"
+      - "traefik.frontend.headers.STSIncludeSubdomains=true"
+      - "traefik.frontend.headers.STSPreload=true"
+      - "traefik.frontend.headers.frameDeny=true"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - traefik_proxy
+      - default
+    ports:
+      - "8004:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    labels:
+      traefik.enable: "true"
+      traefik.backend: phpmyadmin
+      traefik.protocol: http
+      traefik.port: 80
+      traefik.frontend.rule: Host:pma.${DOMAINNAME}
+      traefik.frontend.headers.SSLHost: pma.${DOMAINNAME}
+      traefik.docker.network: traefik_proxy
+      traefik.frontend.passHostHeader: "true"
+      traefik.frontend.headers.SSLForceHost: "true"
+      traefik.frontend.headers.SSLRedirect: "true"
+      traefik.frontend.headers.browserXSSFilter: "true"
+      traefik.frontend.headers.contentTypeNosniff: "true"
+      traefik.frontend.headers.forceSTSHeader: "true"
+      traefik.frontend.headers.STSSeconds: 315360000
+      traefik.frontend.headers.STSIncludeSubdomains: "true"
+      traefik.frontend.headers.STSPreload: "true"
+      traefik.frontend.headers.customResponseHeaders: X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      traefik.frontend.headers.frameDeny: "true"
+      traefik.frontend.headers.customFrameOptionsValue: 'allow-from https:${DOMAINNAME}'
+      traefik.frontend.auth.basic.users: '${HTTP_USERNAME}:${HTTP_PASSWORD}'
+
+
+  nextcloud:
+    container_name: nextcloud
+    restart: always
+    image: linuxserver/nextcloud
+    volumes:
+      - ${USERDIR}/docker/nextcloud:/config
+      - ${USERDIR}/shared_data:/data
+      - ${USERDIR}/docker/shared:/shared
+    ports:
+      - "9999:443"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+
+  netdata:
+    image: netdata/netdata
+    ports:
+      - "19999:19999"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - ${USERDIR}/docker/shared:/shared:rw
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=netdata"
+      - "traefik.frontend.rule=Host:netdata.jaysmedia.site"
+#      - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /traefik"
+      - "traefik.port=19999"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.frontend.headers.SSLRedirect=true"
+    networks:
+      - "default"
+      - "traefik_proxy"  
+    environment:
+      - DOCKER_USR=root
 
 
   traefik:
@@ -43,11 +151,11 @@ services:
     restart: always
     domainname: jaysmedia.site
     networks:
-      - default
-      - traefik_proxy
+     - default
+     - traefik_proxy
     ports:
-#     - "9030:80"
-     - "9040:443"
+     - "80:80"
+     - "443:443"
      - "8080:8080"
     environment:
       - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
@@ -68,12 +176,11 @@ services:
       - "traefik.frontend.headers.STSIncludeSubdomains=true"
       - "traefik.frontend.headers.STSPreload=true"
       - "traefik.frontend.headers.frameDeny=true"
-      - "traefik.frontend.auth.basic.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
+      - "traefik.frontend.auth.basic.users=shaky0001:$$apr1$$PlUiht0U$$tV6JomnCBSMDZjRtu6Uis0"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${USERDIR}/docker/traefik:/etc/traefik
       - ${USERDIR}/docker/shared:/shared
-
 
   jackett:
     image: "linuxserver/jackett"
@@ -190,7 +297,7 @@ services:
     image: "linuxserver/nzbget"
     container_name: "nzbget"
     volumes:
-      -  ${USERDIR}/docker/nzbget:/config
+      - ${USERDIR}/docker/nzbget:/config
       - ${USERDIR}/Downloads:/downloads
       - ${USERDIR}/Downloads/complete:/downloads/complete
       - ${USERDIR}/Downloads/incomplete:/incomplete-downloads
@@ -298,7 +405,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${USERDIR}/docker/transmission-vpn:/data
       - ${USERDIR}/docker/shared:/shared
-      - ${USERDIR}/docker/shared/completed:/shared/completed
+      - ${USERDIR}/Downloads/completed:/data/completed
       - ${USERDIR}/Downloads:/data/watch
       - ${USERDIR}/Downloads/incomplete:/data/incomplete
     environment:
@@ -317,12 +424,13 @@ services:
       - TRANSMISSION_UMASK=002
       - TRANSMISSION_RATIO_LIMIT=1.00
       - TRANSMISSION_RATIO_LIMIT_ENABLED=true
+      - RPC-URL=transmission-vpn.jaysmedia.site
     labels:
       - "traefik.enable=true"
       - "traefik.backend=transmission-vpn"
       - "traefik.frontend.rule=Host:transmission-vpn.jaysmedia.site"
 #      - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /portainer"
-      - "traefik.port=9091"
+      - "traefik.port=9002"
       - "traefik.docker.network=traefik_proxy"
       - "traefik.frontend.headers.SSLRedirect=true"
       - "traefik.frontend.headers.STSSeconds=315360000"
