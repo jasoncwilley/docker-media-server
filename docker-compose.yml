@@ -12,6 +12,31 @@ volumes:
     driver: local
   
 services:
+  nginx:
+    image: linuxserver/nginx
+    restart: always
+    container_name: "nginx"
+    volumes:
+      - ${USERDIR}/docker/nginx:/config
+      - ${USERDIR}/docker/shared:/shared:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    ports:
+  #    - "9999:443"
+    restart: always
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=nginx"
+      - "traefik.frontend.rule=Host:jaysmedia.site"
+#      - "traefik.frontend.rule=Host:${DOMAINNAME}; PathPrefixStrip: /traefik"
+      - "traefik.port=443"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.protocol=https"
+
   db:
     image: mysql:5.7
     restart: always
@@ -28,6 +53,7 @@ services:
     networks:
       - default
       - traefik_proxy
+
   nextcloud:
     container_name: nextcloud
     restart: always
@@ -128,7 +154,6 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - ${USERDIR}/docker/shared:/shared:rw
-
     labels:
       - "traefik.enable=true"
       - "traefik.backend=netdata"
