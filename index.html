@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+   <title>ThePerfectStack-MediaServers</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- CSS - using the Skeleton framework for typography -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <link rel="stylesheet" href="css/common-2.css">
+
+  <style>
+
+
+
+  .wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+
+  }
+
+  @media (min-width: 550px) {
+
+    .wrapper {
+      display: grid;
+      grid-template-columns: repeat(12, [col] 1fr );
+      grid-template-rows: repeat(5, [row] auto) ;
+      grid-column-gap: 1em;
+      grid-row-gap: 15px;
+    }
+
+    .mainheader {
+      grid-column: col / span 12;
+      grid-row: row ;
+      position:fixed;
+     
+    }
+
+    .mainfooter {
+      grid-column: col / span 12;
+      grid-row: row 3 ;
+    }
+
+    .content {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+      margin-top:160px;
+      overflow-y: hidden;
+   } 
+   
+    div.content {
+    overflow-x:hidden;
+       overflow-y:auto;
+    }
+    .content-1 {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+    }
+    .content-2 {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+    }
+    .content-3 {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+    }
+    .content-4 {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+    }
+    .content-5 {
+      grid-column: col 5 / span 8;
+      grid-row: row 2 ;
+    }
+
+    .panel {
+      grid-column: col / span 4;
+      grid-row: row 2 ;
+      position:fixed;
+      top:200px;
+    }
+}
+   .image {
+     padding-left: 50px;
+     width: 400px;
+     height: 450px;
+} 
+ 
+
+  </style>
+
+</head>
+<body>
+
+  <div class="wrapper">
+
+    <header class="mainheader">
+      <h1>The Perfect Stack <span>Comprehensive Guide To Building A Home Media Server</span></h1>
+      <img src="images/GitHub-Mark-32px.png" href="https://github.com/jasoncwilley">
+    </header>
+
+
+
+    <div class="panel">
+        <h4>Table of Contents</h4>
+<ul>
+<li>
+<div class="btn-group">
+            <button type="button" class="btn btn-secondary" href="#basics">
+            The Basics
+            </button>
+
+</li>           
+<li>
+<div class="btn-group">
+            <button type="button" class="btn btn-secondary" href="os-install">
+            System & Network Design
+            </button>
+
+</li>
+<li>
+<div class="btn-group dropright">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            OS Install & Config
+            </button>
+<div class="dropdown-menu">
+                <a class="dropdown-item" href="#os-install">Jump To Section</a>
+                  <div class="dropdown-divider"></div>
+
+
+              <a class="dropdown-item" target="_blank"  href="https://ubuntu.com/download/server">Download Ubuntu Server 18.04 LTS</a>
+                <div class="dropdown-divider"></div>
+</div>
+</div>
+</li>
+<li>
+<div class="btn-group dropright">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Docker-CE Install & Config </button>
+<div class="dropdown-menu">
+                <a class="dropdown-item" href="#docker-install">Jump To Section</a>
+                  <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/#prerequisites">Docker-CE Docs</a>
+                  <div class="dropdown-divider"></div>
+</div>
+</div>
+</li>
+<li>
+<div class="btn-group dropright">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Docker-Compose </button>
+<div class="dropdown-menu">
+                <a class="dropdown-item" href="#docker-compose">Jump To Section</a>
+                  <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="link to docker-compose.yml">Docker-Compose.yml</a>
+                  <div class="dropdown-divider"></div>
+</div>
+</div>
+</li>
+<li>
+<div class="btn-group">
+            <button type="button" class="btn btn-secondary" href="#config">
+            Software Installation</button>
+</div>
+</li>
+<li>
+<div class="btn-group dropright">
+ <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     Links to Docs
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" target="_blank" href="https://portainer.readthedocs.io/en/stable/">Portainer</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://help.ubuntu.com/lts/serverguide/index.html">Ubuntu Server 18.04 LTS</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://prerequisites.jaysmedia.site">Prerequisites</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Docker-CE</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://docs.linuxserver.io/images/docker-nzbget">NZBget</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://hub.docker.com/r/linuxserver/sonarr/">Sonarr</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://hub.docker.com/r/linuxserver/radarr/">Radarr</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://hub.docker.com/r/linuxserver/lidarr">Lidarr</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://hub.docker.com/_/traefik">Traefik</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://hub.docker.com/r/plexinc/pms-docker/">Plex Media Server</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" target="_blank" href="https://docs.organizr.app/">Organizr</a>
+                <div class="dropdown-divider"></div>
+           </div>
+         </div>
+ </li>
+          <li><a href="#"></a></li>
+          <li><a href="#"></a></li>
+          <li><a href="#"></a></li>
+          <li><a href="#"></a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h2>Media Servers: The Basics</h2>
+  <p>A media server is a network device which acts as a central location for users to access media files
+    on a network. There are three main components to any media server system:
+    <ol>
+    <li>Server –  this is a smart device which ‘serves’ clients with the requested media files.</li>
+    <li>Storage Device –  which is used to store all the media files such as videos, photos, computer files.</li>
+    <li>Clients – these are devices that the end user can access the media from. Examples: TV, mobile phone,
+    your personal computer.</li>
+    <li>Software – a media server needs to have appropriate software that is configured to allow the aforementioned
+      components to communicate with the with the server and access files.</li>
+    </ol>
+    
+<img src="images/home-media-infographic.jpg" alt="Home Media Server Network Diagram">
+
+<p>The above illustration depicts a basic Media Server network setup.  Media Server Networks range in size and complexity depending on host of
+  factors.  The remainder of this article focuses on building and configuring a Home Media Server for personal use. This guide is just that, a guide that is designed to assist in the initial setup and configuration of a Home Media Server and not a comprehensive manual on media servers or network configuration. 
+ I acknowledge there are additional and more secure ways to configure home networks but they are beyond the scope of this guide.  That said, Let's jump right in and go over the prerequisites needed to follow along with this tutorial.  
+  ways to configure 
+</p>
+ 
+
+   
+        <h2>Prerequisites:</h2>
+<p>
+Prerequisites section goes here...
+</p>
+
+<div id="software">
+    <h2>Software Installation</h2>
+<p>Installing the Software Section</p>
+</div>
+    <div class="indexer">
+        <h2>Torrent and Indexers Section:</h2>
+<p>
+Torrent and Indexer Section goes here...
+</p>
+</div>
+
+    <div class="pvr">
+        <h2>Personal Video Recorders</h2>
+<p>
+Personal Vide Recorder  section goes here...
+</p>
+</div>
+
+    <div class="music">
+        <h2>Music Library Monitor:</h2>
+<p>
+Music Library Library Monitor Section goes here...
+</p>
+</div>
+
+    <div class="media">
+        <h2>Media Center Clients:</h2>
+<p>
+Media Center section goes here...
+</p>
+</div>
+
+    <div class="proxy">
+        <h2>Reverse Proxy and Let's Encrypt:</h2>
+<p>
+Reverse Proxy and Let's Encrypt  section goes here...
+</p>
+</div>
+</div>
+     <footer class="mainfooter">
+      <p>This book is available to read in full on <a href="https://www.gutenberg.org/files/861/861-h/861-h.htm">the Project Gutenburg website</a>.</p>
+    </footer>
+  </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

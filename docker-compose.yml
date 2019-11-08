@@ -20,6 +20,7 @@ services:
       - ${USERDIR}/docker/nginx:/config
       - ${USERDIR}/docker/shared:/shared:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${USERDIR}/docker/nginx/www:/var/www:ro
 #    ports:
   #    - "9999:443"
     restart: always
