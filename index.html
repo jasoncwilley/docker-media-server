@@ -38,22 +38,29 @@
     .mainheader {
       grid-column: col / span 12;
       grid-row: row ;
-      position:fixed;
-     
+      position: sticky;
+      z-index: 3;
     }
 
+    .github-link {
+      padding-bottom: 10px;
+}
     .mainfooter {
       grid-column: col / span 12;
       grid-row: row 3 ;
+      position: sticky;                                                       
+      z-index: 3;
+
     }
 
     .content {
       grid-column: col 5 / span 8;
       grid-row: row 2 ;
-      margin-top:160px;
+      margin-top:0px
       overflow-y: hidden;
-   } 
-   
+           
+   }
+
     div.content {
     overflow-x:hidden;
        overflow-y:auto;
@@ -83,15 +90,17 @@
       grid-column: col / span 4;
       grid-row: row 2 ;
       position:fixed;
-      top:200px;
+      top:185px;
+      z-index: 3
     }
 }
    .image {
      padding-left: 50px;
      width: 400px;
      height: 450px;
-} 
- 
+     
+}
+
 
   </style>
 
@@ -102,7 +111,7 @@
 
     <header class="mainheader">
       <h1>The Perfect Stack <span>Comprehensive Guide To Building A Home Media Server</span></h1>
-      <img src="images/GitHub-Mark-32px.png" href="https://github.com/jasoncwilley">
+      <img class="github-link" src="images/GitHub-Mark-32px.png" href="https://github.com/jasoncwilley">
     </header>
 
 
@@ -116,35 +125,44 @@
             The Basics
             </button>
 
-</li>           
-<li>
-<div class="btn-group">
-            <button type="button" class="btn btn-secondary" href="os-install">
-            System & Network Design
-            </button>
-
 </li>
 <li>
 <div class="btn-group dropright">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            OS Install & Config
+            <button type="button" class="btn btn-secondary dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Network Design
             </button>
 <div class="dropdown-menu">
                 <a class="dropdown-item" href="#os-install">Jump To Section</a>
                   <div class="dropdown-divider"></div>
 
 
-              <a class="dropdown-item" target="_blank"  href="https://ubuntu.com/download/server">Download Ubuntu Server 18.04 LTS</a>
+              <a class="dropdown-item" target="_blank"  href="images/network-design-chart.png">Network Diagram</a>
                 <div class="dropdown-divider"></div>
 </div>
 </div>
 </li>
 <li>
 <div class="btn-group dropright">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Docker-CE Install & Config </button>
+            <button type="button" class="btn btn-secondary dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Network Design
+            </button>
 <div class="dropdown-menu">
-                <a class="dropdown-item" href="#docker-install">Jump To Section</a>
+                <a class="dropdown-item" href="#os-install">Jump To Section</a>
+                  <div class="dropdown-divider"></div>
+
+
+              <a class="dropdown-item" target="_blank"  href="images/network-design-chart.png">Network Diagram</a>
+                <div class="dropdown-divider"></div>
+</div>
+</div>
+</li>
+
+<li>
+<div class="btn-group dropright">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          OS Install & Configuration </button>
+<div class="dropdown-menu">
+                <a class="dropdown-item" href="os-install"">Jump To Section</a>
                   <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://docs.docker.com/install/linux/docker-ce/ubuntu/#prerequisites">Docker-CE Docs</a>
                   <div class="dropdown-divider"></div>
@@ -220,22 +238,79 @@
     <li>Software – a media server needs to have appropriate software that is configured to allow the aforementioned
       components to communicate with the with the server and access files.</li>
     </ol>
-    
+
 <img src="images/home-media-infographic.jpg" alt="Home Media Server Network Diagram">
 
 <p>The above illustration depicts a basic Media Server network setup.  Media Server Networks range in size and complexity depending on host of
-  factors.  The remainder of this article focuses on building and configuring a Home Media Server for personal use. This guide is just that, a guide that is designed to assist in the initial setup and configuration of a Home Media Server and not a comprehensive manual on media servers or network configuration. 
- I acknowledge there are additional and more secure ways to configure home networks but they are beyond the scope of this guide.  That said, Let's jump right in and go over the prerequisites needed to follow along with this tutorial.  
-  ways to configure 
+  factors.  The remainder of this article focuses on building and configuring a Home Media Server for personal use. This guide is just that, a guide that is designed to assist in the initial setup and configuration of a Home Media Server and not a comprehensive manual on media servers or network configuration.
+ I acknowledge there are additional and more secure ways to configure home networks but they are beyond the scope of this guide.  That said, Let's jump right in and go over the prerequisites needed to follow along with this tutorial.
+  ways to configure
 </p>
- 
 
-   
-        <h2>Prerequisites:</h2>
+
+
+        <h2 id="network-design" >Network Design:</h2>
 <p>
-Prerequisites section goes here...
+Network planning and design is an iterative process, encompassing topological design, network-synthesis, and network-realization.  
+During this process the goals and purpose of the network are defined as well as the tools or services that will be used to achieve them.  I cannot 
+emphasize thie step enough.  Following this process will not ensure success but it will prevent a ton of headaches along the way. 
+</p>
+<ul>
+<li>Goals</li>
+<ul>Create a media center that can be used to store and orgainze digital media</ul>
+<ul>The media center needs to be able to be accessed  both locally and remotely</ul>
+<ul>Ability to play music or watch videos on networked devices such as phones, smart tvs, laptops etc.</ul>
+<ul>Download new media through torrents and news servers</ul>
+<ul>Implement password protection and https</ul>
+<ul>VPN capabilities</ul>
+</ul>
+<p>Now that I have a clear set of goals I can begin the process of selecting the tools and services that can be 
+employed to meet them.
+<ul>
+<li>Ubuntu Server</li>
+<ul>Media will be stored on the server configured for local and remote access via ssh as well as the internet</ul>
+<li>Docker</li>
+<ul>Create virtual containers within Ubuntu to perform network services.</ul>
+<li>Plex Media Server</li>
+<ul>Media player with both local and remote access</ul>
+<ul>Compatible with most networkable devices </ul>
+<li>Transmoission-VPN</li>
+<ul>Bittorrent client with VPN capabilities for downloading torrents</ul>
+<ul>Accessible remotely and can be configured to work with other services</ul>
+</li>                         
+<li>NZBget</li>
+<ul>Search and Download media from multiple newsservers</ul>
+<ul>Automated features include compiling media files and sorting completed downloads to appropiate folders</ul>
+<ul>API access and highly configurable</ul>
+</li>
+<li>Ronarr</li>
+<ul>Personal Video Recorder with IMDB intergration that manages movie library</ul>
+<ul>Searches for torrents and nzb files</ul>
+<ul>Automates the process when intergraed with Transmission-VPN and NZBget</ul>
+</li> 
+<li>Sonarr</li>
+<ul>Personal Video Recorder with IMDB intergration that manages the tvshow  library</ul>
+<ul>Searches for torrents and nzb files</ul>
+<ul>Automates the process when intergraed with Transmission-VPN and NZBget</ul>
+</li>  
+<li>Lidarr</li>
+<ul>Personal Music Recorder to manage the music library</ul>
+<ul>Intergrated with the Headphones indexer movie library</ul>
+<ul>Searches for torrents and nzb files</ul>
+<ul>Automates the process when intergraed with Transmission-VPN and NZBget</ul>
+</li>  
+<li>Traefik</li>
+<ul>Reverse proxy</ul>
+<ul>Configured to work with Let's Encrypt so services can be accessed securely through https</ul>
+</li>  
+</ul>
+<p>
+These services are all highly configurable and can be intergrated to automate much of the searching, downloading and file sorting processes that can be very time consuming.  
+Take a look at the networking diagram below for a graphical depiction of the network.  Properly defining my goals and identifying the services needed to achieve those goals will save time and reduce the potential problems that I face as I complete this project.  The network diagram below is 
+a graphical depiction of the network and services. 
 </p>
 
+<img src="images/network-design-chart.png" alt="Network Design Chart" height="500px" width="600px">
 <div id="software">
     <h2>Software Installation</h2>
 <p>Installing the Software Section</p>
